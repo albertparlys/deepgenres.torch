@@ -60,3 +60,7 @@ First, because music from SoundCloud is free, we take advantage of a pretty swee
  
 ## References
 All of the above images can be found on Julien Despois' really cool [blog post](https://chatbotslife.com/finding-the-genre-of-a-song-with-deep-learning-da8f59a61194), which can also be used as a reference for more in-depth details. This code is largely based off of his original TensorFlow implementation which can be found [here](https://github.com/despoisj/DeepAudioClassification).  
+
+### Updates
+This version is updated from my published paper https://doi.org/10.14710/transient.7.1.28-33. (Not all changes uploaded).
+This versioin also using cuda instead of cudnn, due to lack of computer specification capabilities.
