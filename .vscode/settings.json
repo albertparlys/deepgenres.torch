@@ -1,0 +1,30 @@
+{
+    "sqltools.connections": [
+        {
+            "mysqlOptions": {
+                "authProtocol": "default"
+            },
+            "previewLimit": 50,
+            "server": "localhost",
+            "port": 3306,
+            "driver": "MySQL",
+            "name": "CRMLocal",
+            "database": "crm",
+            "username": "root",
+            "password": "JUST4m##"
+        },
+        {
+            "mysqlOptions": {
+                "authProtocol": "default"
+            },
+            "previewLimit": 50,
+            "server": "localhost",
+            "port": 3306,
+            "driver": "MySQL",
+            "name": "AccessControl Local",
+            "database": "accesscontrol",
+            "username": "root",
+            "password": "JUST4m##"
+        }
+    ]
+}
