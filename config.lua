@@ -1,11 +1,11 @@
 local cfg = {
-  genres = {'classical','country','hip-hop','rock','tropical-house'},
+  genres = {'rock','dubstep','pop','reggae','classic'},
 
 
-  files = 250, -- num slices per genre to use in final dataset
-  valRatio = 0.3, -- validation ratio
-  testRatio = 0.1, -- test ratio
-  slicesPerGenre = 1000, -- num slices per genre initially created
+  files = 150, -- num slices per genre to use in final dataset
+  valRatio = 0, -- validation ratio
+  testRatio = 0, -- test ratio
+  slicesPerGenre = 30000, -- num slices per genre initially created
   slice = 128, -- slice size
 
   -- Directories for files
@@ -14,7 +14,9 @@ local cfg = {
     spec = "./Spectrograms/", -- store initial spectrograms here
     slices = "./Slices/", -- store ~2 second spectrogram slices here
     dataset = "./Dataset/", -- store serialized instances and labels for train and test
-    raw = "./Raw/" -- store tmp files
+    raw = "./Raw/", -- store tmp files
+    uji= "./Uji/",
+    dataUji="./Uji/Data/"
   },
 
   -- Spectrogram params
@@ -28,8 +30,8 @@ local cfg = {
   -- Model Params
   model = {
     batchSize = 1, -- input size: 1 x slice x slice
-    lr = 0.001,
-    epochs = 20
+    lr = 0.0001,
+    epochs = 100
   }
 }
 

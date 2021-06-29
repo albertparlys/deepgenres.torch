@@ -29,7 +29,7 @@ local function createSpectrogram(dir, fn, new_fn)
     end
   end
 
-  cmd2 = "sox "..tmpfile.." -n spectrogram -Y 200 -X "..pps.." -m -r -o "..imgfile
+  cmd2 = "sox "..tmpfile.." -n spectrogram -Y 200 -X "..pps.." -h -r -o "..imgfile
   -- status, song, sample_rate = pcall(function () return audio.load(fn) end)
   local status2 = os.execute(cmd2)
   -- execution failed, corrupted audio file?

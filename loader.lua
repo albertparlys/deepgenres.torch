@@ -3,10 +3,12 @@ require 'paths'
 require 'nn'
 require 'utils'
 require 'slice_track'
+require 'xlua'
 
 local cfg = paths.dofile('config.lua')
 local utils = paths.dofile('utils.lua')
 local Loader = torch.class('Loader')
+--local bodoh = paths.dofile('bodoh.lua')
 
 local function getDatasetName(numFiles, sliceSize)
   local name = numFiles..'_'..sliceSize
@@ -34,39 +36,54 @@ local function saveDataset(train_X, train_y, test_X, test_y)
 end
 
 local function createDatasetFromSlices(genreSz, genres, sliceSz, slicePath, valRatio, testRatio)
-  local num = 250*#genres --#genres*genreSz
-  local data = torch.Tensor(num,sliceSz,sliceSz)
-  -- local labels = torch.Tensor(num,#genres):zero()
-  local labels = torch.Tensor(num):zero()
+  local num = #genres*genreSz --250*#genres 
+  local data = torch.CudaTensor(num,sliceSz,sliceSz)
+  --local labels = torch.Tensor(num,#genres):zero()
+  local labels = torch.CudaTensor(num):zero()
   idx = 1
+  algo = "sgd"
   for label,genre in pairs(genres) do
       print("-> Adding ...", genre)
       --Get slices in genre subfolder
       filenames = utils.slice(paths.files(slicePath..genre, '.png'),1,genreSz,1)
-
+	for i = 1, #filenames do	
+	cmd3 = os.execute("cp "..slicePath..genre.."/"..filenames[i].." ./Slices/training/"..algo.."/"..genre.."/")
+	cmd4 = os.execute("mv ./Slices/training/"..algo.."/"..genre.."/"..filenames[i].." ./Slices/training/"..algo.."/"..genre.."/"..genre.."_"..i..".png")  
+	xlua.progress(i,#filenames)
+	end
+--	print(filenames)
       --Add data (X,y)
+	--print(label)
       for i,fn in pairs(filenames) do
-        if i > 250 then break end -- only want the first genreSz songs
+        if i > num then break end -- only want the first genreSz songs
         img = utils.getImageData(slicePath..genre.."/"..fn, sliceSz)
-        data[idx] = img
-        -- labels[idx][label]= 1
+	--print(img)        
+	data[idx] = img
+        --labels[idx][label]= 1
         labels[idx] = label
         idx = idx + 1
       end
     end
+
     -- Set sizes
     val_ = utils.toInt(num*valRatio)
     test_ = utils.toInt(num*testRatio)
     train_ = num-(val_+test_)
     --Shuffle data
+    shuffle = torch.CudaTensor(data:size(1)):long()    
     shuffle = torch.randperm(data:size(1)):long()
-    shuffledData = data:index(1,shuffle):contiguous()
-    shuffledLabels = labels:index(1,shuffle):contiguous()
+
+    --print(shuffle)
+    shuffledData = data:index(1,shuffle):clone()
+    shuffledLabels = labels:index(1,shuffle):clone()
 
     train_X = shuffledData[{{1,train_},{},{}}]:clone()
     train_y = shuffledLabels[{{1,train_}}]:clone()
     test_X = shuffledData[{{train_,train_+val_},{},{}}]:clone()
     test_y = shuffledLabels[{{train_,train_+val_}}]:clone()
+   
+	--train_X = data
+	--train_y = labels
     print("Dataset created! ✅")
     --Save
     saveDataset(train_X,train_y,test_X,test_y)

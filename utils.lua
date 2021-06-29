@@ -1,6 +1,6 @@
 require 'audio'
 require 'image'
---local cfg = dofile 'config'
+local cfg = dofile 'config.lua'
 
 local function getProcessedData(img, imageSize)
   local img = img:resize(1,imageSize,imageSize)
@@ -9,6 +9,7 @@ local function getProcessedData(img, imageSize)
 end
 
 local function getImageData(fn, imageSize)
+	--print(fn)
   local img = image.load(fn)
   local imgData = getProcessedData(img, imageSize)
   return imgData
@@ -26,12 +27,12 @@ end
 
 local function slice(tbl, first, last, step)
   local sliced = {}
-
   for i = first or 1, last or #tbl, step or 1 do
     sliced[#sliced+1] = tbl()
   end
 
   return sliced
+
 end
 
 local function getLabelTable(genre)
